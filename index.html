@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro Institucional - 6° Grado de Primaria | Colegio Lobachevsky</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
+  <style>
+    :root{
+      --navy:#0b1f3a;
+      --blue:#123f73;
+      --cyan:#1d9bd1;
+      --gold:#d5a72f;
+      --paper:#f5f7fb;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 10% 0%, rgba(29,155,209,.10), transparent 28%),
+        radial-gradient(circle at 90% 10%, rgba(213,167,47,.10), transparent 24%),
+        var(--paper);
+      color:#1f2937;
+      min-height:100vh;
+    }
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button{
+      -webkit-appearance:none;
+      margin:0;
+    }
+    input[type="number"]{ -moz-appearance:textfield; }
+
+    .institutional-card{
+      border:1px solid #d7deea;
+      box-shadow:0 18px 45px rgba(11,31,58,.13);
+    }
+
+    .header-pattern{
+      background:
+        linear-gradient(120deg, rgba(255,255,255,.04) 25%, transparent 25%) 0 0/32px 32px,
+        linear-gradient(300deg, rgba(255,255,255,.03) 25%, transparent 25%) 0 0/32px 32px,
+        linear-gradient(135deg, var(--navy), var(--blue));
+    }
+
+    .crest{
+      width:76px;height:76px;border-radius:18px;
+      border:2px solid rgba(255,255,255,.35);
+      display:flex;align-items:center;justify-content:center;
+      background:rgba(255,255,255,.08);
+      box-shadow:inset 0 0 0 5px rgba(255,255,255,.04);
+    }
+
+    .select-asistio { background-color:#dcfce7!important; color:#166534!important; }
+    .select-tarde   { background-color:#fef3c7!important; color:#92400e!important; }
+    .select-falto   { background-color:#fee2e2!important; color:#991b1b!important; }
+    .select-retiro  { background-color:#ffedd5!important; color:#9a3412!important; }
+    .select-default { background-color:#f3f4f6!important; color:#374151!important; }
+
+    .select-cond-a  { background-color:#dcfce7!important; color:#166534!important; }
+    .select-cond-b  { background-color:#fef3c7!important; color:#92400e!important; }
+    .select-cond-c  { background-color:#fee2e2!important; color:#991b1b!important; }
+
+    .data-row:nth-child(even){ background:#fbfcfe; }
+    .data-row:hover{ background:#eff6ff; }
+
+    .score-input{
+      width:100%;
+      min-width:54px;
+      text-align:center;
+      padding:.48rem .25rem;
+      border:1px solid #d8e0ea;
+      border-radius:.55rem;
+      background:white;
+      outline:none;
+      transition:.2s;
+    }
+    .score-input:focus{
+      border-color:#1d9bd1;
+      box-shadow:0 0 0 3px rgba(29,155,209,.15);
+    }
+
+    @media print{
+      .no-print{display:none!important;}
+      body{background:white;}
+      .institutional-card{box-shadow:none;border:0;}
+    }
+  </style>
+</head>
+
+<body class="p-3 md:p-7">
+  <main class="max-w-[1500px] mx-auto bg-white rounded-2xl overflow-hidden institutional-card">
+
+    <!-- ENCABEZADO -->
+    <section class="header-pattern text-white">
+      <div class="px-5 md:px-8 py-6 border-b-[5px] border-amber-400">
+        <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-6">
+
+          <div class="flex items-center gap-4">
+            <div class="crest shrink-0" aria-label="Emblema institucional">
+              <div class="text-center leading-none">
+                <div class="text-2xl font-black">CL</div>
+                <div class="text-[10px] tracking-[.22em] mt-1">2026</div>
+              </div>
+            </div>
+
+            <div>
+              <div class="text-xs md:text-sm uppercase tracking-[.30em] text-sky-200 font-semibold">
+                Colegio Lobachevsky
+              </div>
+              <h1 class="text-2xl md:text-4xl font-black tracking-tight mt-1">
+                Registro de Evaluación y Asistencia
+              </h1>
+              <div class="flex flex-wrap gap-x-5 gap-y-1 mt-3 text-sm text-slate-200">
+                <span><strong class="text-white">Nivel:</strong> Primaria</span>
+                <span><strong class="text-white">Grado:</strong> 6.º Grado</span>
+                <span><strong class="text-white">Profesor:</strong> Danny Torres</span>
+                <span><strong class="text-white">Año:</strong> 2026</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-3 min-w-[320px]">
+            <div class="bg-white/10 border border-white/15 rounded-xl px-4 py-3 backdrop-blur-sm">
+              <div class="text-[11px] uppercase tracking-widest text-sky-200">Curso / Área</div>
+              <input id="input-curso" type="text" value="Matemática"
+                     class="mt-1 w-full bg-transparent text-white font-semibold outline-none border-b border-white/30 pb-1 focus:border-amber-300">
+            </div>
+
+            <div class="bg-white/10 border border-white/15 rounded-xl px-4 py-3 backdrop-blur-sm">
+              <div class="text-[11px] uppercase tracking-widest text-sky-200">Fecha y hora actual</div>
+              <div id="reloj" class="mt-1 font-semibold text-white"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOTONERA -->
+      <div class="px-5 md:px-8 py-4 bg-slate-950/20 no-print">
+        <div class="flex flex-wrap gap-2">
+          <button onclick="marcarTodosAsistio()"
+                  class="px-4 py-2 rounded-lg bg-sky-500 hover:bg-sky-400 font-semibold shadow-sm transition">
+            ✓ Todos asistieron
+          </button>
+          <button onclick="marcarTodosConductaA()"
+                  class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 font-semibold shadow-sm transition">
+            ★ Conducta A
+          </button>
+          <button onclick="limpiarRegistro()"
+                  class="px-4 py-2 rounded-lg bg-slate-600 hover:bg-slate-500 font-semibold shadow-sm transition">
+            ↺ Limpiar
+          </button>
+          <button onclick="exportarPDF()"
+                  class="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 font-semibold shadow-sm transition">
+            ↓ Descargar PDF
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- INFORMACIÓN -->
+    <section class="px-5 md:px-8 pt-5">
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+          <div class="text-[11px] uppercase tracking-widest text-slate-500 font-bold">Tema / Sesión</div>
+          <input id="input-tema" type="text" placeholder="Escriba el tema de clase"
+                 class="w-full bg-transparent font-semibold text-slate-800 outline-none mt-1">
+        </div>
+        <div class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+          <div class="text-[11px] uppercase tracking-widest text-slate-500 font-bold">Total de alumnos</div>
+          <div class="font-black text-xl text-[#123f73] mt-1">10 estudiantes</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TABLA -->
+    <section class="p-5 md:p-8">
+      <div class="overflow-x-auto rounded-xl border border-slate-300">
+        <table class="w-full min-w-[1050px] border-collapse text-sm" id="registro-tabla">
+          <thead>
+            <tr class="bg-[#0b1f3a] text-white">
+              <th rowspan="2" class="border border-slate-500 p-3 w-14 text-center">N.º</th>
+              <th rowspan="2" class="border border-slate-500 p-3 min-w-[240px] text-left">Alumno(a)</th>
+              <th rowspan="2" class="border border-slate-500 p-3 w-32 text-center">Asistencia</th>
+              <th rowspan="2" class="border border-slate-500 p-3 w-24 text-center bg-[#14532d]">Conducta</th>
+              <th colspan="3" class="border border-slate-500 p-2 text-center bg-[#123f73]">
+                Participación de clase
+              </th>
+              <th colspan="3" class="border border-slate-500 p-2 text-center bg-[#3730a3]">
+                Práctica calificada
+              </th>
+            </tr>
+            <tr class="bg-slate-100 text-slate-800">
+              <th class="border border-slate-300 p-2 text-center">P1</th>
+              <th class="border border-slate-300 p-2 text-center">P2</th>
+              <th class="border border-slate-300 p-2 text-center bg-sky-100 text-sky-900">Total</th>
+              <th class="border border-slate-300 p-2 text-center">PC1</th>
+              <th class="border border-slate-300 p-2 text-center">PC2</th>
+              <th class="border border-slate-300 p-2 text-center bg-indigo-100 text-indigo-900">Prom.</th>
+            </tr>
+          </thead>
+          <tbody id="cuerpo-tabla"></tbody>
+        </table>
+      </div>
+
+      <div class="mt-4 flex flex-col md:flex-row md:justify-between gap-2 text-xs text-slate-500">
+        <span>Asistencia: Asistió · Tarde · Faltó · Se retiró</span>
+        <span>Conducta: A · B · C</span>
+        <span>El PDF registra automáticamente la fecha y hora de descarga.</span>
+      </div>
+    </section>
+
+    <footer class="px-5 md:px-8 py-4 bg-slate-50 border-t border-slate-200 flex flex-col md:flex-row justify-between gap-2 text-xs text-slate-500">
+      <span>Colegio Lobachevsky · Registro institucional</span>
+      <span>Prof. Danny Torres · 6.º Grado de Primaria</span>
+    </footer>
+  </main>
+
+<script>
+  // Orden alfabético por apellido
+  const alumnos = [
+    "Bances Aniceto Paolo Alexander",
+    "Barrios Muro Javier Alessandro",
+    "Bohorquez Avilés Fabio Alexander",
+    "Meiggs Vargas Oscar Yamil",
+    "Ramírez Herrera Sofia Alejandra",
+    "Ramírez Natividad Ángelo Jack",
+    "Silva Pretel María Laura Valentina",
+    "Tardillo Ochoa Harumi Vania",
+    "Trujillo Vela Luciana Solange",
+    "Valladolid Torres Axel"
+  ];
+
+  const tbody = document.getElementById('cuerpo-tabla');
+
+  alumnos.forEach((alumno, index) => {
+    const i = index + 1;
+    const tr = document.createElement('tr');
+    tr.className = 'data-row border-b border-slate-200';
+
+    tr.innerHTML = `
+      <td class="border border-slate-300 p-2 text-center font-bold text-slate-500">${i}</td>
+      <td class="border border-slate-300 p-2.5 font-semibold text-slate-800">${alumno}</td>
+
+      <td class="border border-slate-300 p-1.5">
+        <select class="asistencia-select select-default w-full rounded-lg p-2 text-xs font-bold outline-none cursor-pointer" data-row="${i}">
+          <option value="-">- Marcar -</option>
+          <option value="Asistió">Asistió</option>
+          <option value="Tarde">Tarde</option>
+          <option value="Faltó">Faltó</option>
+          <option value="Se retiró">Se retiró</option>
+        </select>
+      </td>
+
+      <td class="border border-slate-300 p-1.5">
+        <select class="conducta-select select-default w-full rounded-lg p-2 text-xs font-bold outline-none cursor-pointer" data-row="${i}">
+          <option value="-">-</option>
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+        </select>
+      </td>
+
+      <td class="border border-slate-300 p-1.5">
+        <input type="number" min="0" max="100" class="score-input input-part" data-row="${i}">
+      </td>
+      <td class="border border-slate-300 p-1.5">
+        <input type="number" min="0" max="100" class="score-input input-part" data-row="${i}">
+      </td>
+      <td class="border border-slate-300 p-2 text-center font-black text-sky-900 bg-sky-50" id="total-part-${i}">0</td>
+
+      <td class="border border-slate-300 p-1.5">
+        <input type="number" min="0" max="20" class="score-input input-prac" data-row="${i}">
+      </td>
+      <td class="border border-slate-300 p-1.5">
+        <input type="number" min="0" max="20" class="score-input input-prac" data-row="${i}">
+      </td>
+      <td class="border border-slate-300 p-2 text-center font-black text-indigo-900 bg-indigo-50" id="prom-prac-${i}">0</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  function limitarValor(input, min, max){
+    if(input.value === '') return;
+    let n = Number(input.value);
+    if(n < min) input.value = min;
+    if(n > max) input.value = max;
+  }
+
+  document.addEventListener('input', (e) => {
+    if(e.target.classList.contains('input-part')){
+      limitarValor(e.target, 0, 100);
+      const row = e.target.dataset.row;
+      const valores = [...document.querySelectorAll(`.input-part[data-row="${row}"]`)]
+        .map(x => Number(x.value || 0));
+      document.getElementById(`total-part-${row}`).textContent = valores.reduce((a,b)=>a+b,0);
+    }
+
+    if(e.target.classList.contains('input-prac')){
+      limitarValor(e.target, 0, 20);
+      const row = e.target.dataset.row;
+      const inputs = [...document.querySelectorAll(`.input-prac[data-row="${row}"]`)];
+      const valores = inputs
+        .filter(x => x.value.trim() !== '')
+        .map(x => Number(x.value));
+
+      let promedio = 0;
+      if(valores.length) promedio = valores.reduce((a,b)=>a+b,0) / valores.length;
+
+      document.getElementById(`prom-prac-${row}`).textContent =
+        valores.length ? promedio.toFixed(1).replace('.0','') : '0';
+    }
+  });
+
+  document.addEventListener('change', (e) => {
+    if(e.target.classList.contains('asistencia-select')){
+      e.target.classList.remove('select-default','select-asistio','select-tarde','select-falto','select-retiro');
+      const v = e.target.value;
+      if(v === 'Asistió') e.target.classList.add('select-asistio');
+      else if(v === 'Tarde') e.target.classList.add('select-tarde');
+      else if(v === 'Faltó') e.target.classList.add('select-falto');
+      else if(v === 'Se retiró') e.target.classList.add('select-retiro');
+      else e.target.classList.add('select-default');
+    }
+
+    if(e.target.classList.contains('conducta-select')){
+      e.target.classList.remove('select-default','select-cond-a','select-cond-b','select-cond-c');
+      const v = e.target.value;
+      if(v === 'A') e.target.classList.add('select-cond-a');
+      else if(v === 'B') e.target.classList.add('select-cond-b');
+      else if(v === 'C') e.target.classList.add('select-cond-c');
+      else e.target.classList.add('select-default');
+    }
+  });
+
+  function marcarTodosAsistio(){
+    document.querySelectorAll('.asistencia-select').forEach(s => {
+      s.value = 'Asistió';
+      s.dispatchEvent(new Event('change', {bubbles:true}));
+    });
+  }
+
+  function marcarTodosConductaA(){
+    document.querySelectorAll('.conducta-select').forEach(s => {
+      s.value = 'A';
+      s.dispatchEvent(new Event('change', {bubbles:true}));
+    });
+  }
+
+  function limpiarRegistro(){
+    if(!confirm('¿Desea limpiar todo el registro actual?')) return;
+
+    document.querySelectorAll('.asistencia-select, .conducta-select').forEach(s => {
+      s.value = '-';
+      s.dispatchEvent(new Event('change', {bubbles:true}));
+    });
+
+    document.querySelectorAll('.score-input').forEach(i => i.value = '');
+    alumnos.forEach((_,index)=>{
+      const i=index+1;
+      document.getElementById(`total-part-${i}`).textContent='0';
+      document.getElementById(`prom-prac-${i}`).textContent='0';
+    });
+  }
+
+  function fechaHoraObjeto(){
+    const ahora = new Date();
+    return {
+      ahora,
+      fecha: ahora.toLocaleDateString('es-PE',{
+        weekday:'long', year:'numeric', month:'long', day:'numeric'
+      }),
+      hora: ahora.toLocaleTimeString('es-PE',{
+        hour:'2-digit', minute:'2-digit', second:'2-digit'
+      }),
+      fechaCorta: `${String(ahora.getDate()).padStart(2,'0')}-${String(ahora.getMonth()+1).padStart(2,'0')}-${ahora.getFullYear()}`,
+      horaArchivo: `${String(ahora.getHours()).padStart(2,'0')}-${String(ahora.getMinutes()).padStart(2,'0')}-${String(ahora.getSeconds()).padStart(2,'0')}`
+    };
+  }
+
+  function actualizarReloj(){
+    const f = fechaHoraObjeto();
+    document.getElementById('reloj').textContent = `${f.fecha} · ${f.hora}`;
+  }
+  actualizarReloj();
+  setInterval(actualizarReloj,1000);
+
+  function obtenerDatosTabla(){
+    return [...document.querySelectorAll('#cuerpo-tabla tr')].map((fila,index)=>{
+      const i = index+1;
+      const part = fila.querySelectorAll('.input-part');
+      const prac = fila.querySelectorAll('.input-prac');
+
+      return [
+        i,
+        alumnos[index],
+        fila.querySelector('.asistencia-select').value,
+        fila.querySelector('.conducta-select').value,
+        part[0].value || '',
+        part[1].value || '',
+        document.getElementById(`total-part-${i}`).textContent,
+        prac[0].value || '',
+        prac[1].value || '',
+        document.getElementById(`prom-prac-${i}`).textContent
+      ];
+    });
+  }
+
+  function exportarPDF(){
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({orientation:'landscape', unit:'mm', format:'a4'});
+    const info = fechaHoraObjeto();
+
+    const curso = document.getElementById('input-curso').value.trim() || 'Sin curso';
+    const tema = document.getElementById('input-tema').value.trim() || '-';
+
+    // Encabezado institucional
+    doc.setFillColor(11,31,58);
+    doc.rect(0,0,297,34,'F');
+
+    doc.setFillColor(213,167,47);
+    doc.rect(0,34,297,2,'F');
+
+    doc.setTextColor(255,255,255);
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(18);
+    doc.text('COLEGIO LOBACHEVSKY',14,12);
+
+    doc.setFontSize(13);
+    doc.text('Registro de Evaluación y Asistencia — 6.º Grado de Primaria',14,21);
+
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(9);
+    doc.text(`Profesor: Danny Torres   |   Curso: ${curso}`,14,28);
+
+    doc.setFontSize(8.5);
+    doc.text(`Tema: ${tema}`,205,14);
+    doc.text(`Descargado: ${info.fecha}`,205,21);
+    doc.text(`Hora: ${info.hora}`,205,28);
+
+    doc.autoTable({
+      startY:41,
+      head:[
+        [
+          {content:'N.º',rowSpan:2},
+          {content:'Alumno(a)',rowSpan:2},
+          {content:'Asistencia',rowSpan:2},
+          {content:'Conducta',rowSpan:2},
+          {content:'Participación de clase',colSpan:3},
+          {content:'Práctica calificada',colSpan:3}
+        ],
+        ['P1','P2','Total','PC1','PC2','Prom.']
+      ],
+      body:obtenerDatosTabla(),
+      theme:'grid',
+      styles:{
+        font:'helvetica',
+        fontSize:8.5,
+        cellPadding:2.1,
+        valign:'middle',
+        lineColor:[184,194,207],
+        lineWidth:.25
+      },
+      headStyles:{
+        fillColor:[18,63,115],
+        textColor:[255,255,255],
+        fontStyle:'bold',
+        halign:'center'
+      },
+      alternateRowStyles:{ fillColor:[248,250,252] },
+      columnStyles:{
+        0:{halign:'center',cellWidth:12},
+        1:{cellWidth:56,fontStyle:'bold'},
+        2:{halign:'center',cellWidth:27},
+        3:{halign:'center',cellWidth:20},
+        4:{halign:'center',cellWidth:18},
+        5:{halign:'center',cellWidth:18},
+        6:{halign:'center',cellWidth:19},
+        7:{halign:'center',cellWidth:18},
+        8:{halign:'center',cellWidth:18},
+        9:{halign:'center',cellWidth:20}
+      },
+      didDrawPage: function(){
+        const pageCount = doc.internal.getNumberOfPages();
+        doc.setFontSize(8);
+        doc.setTextColor(100,116,139);
+        doc.text(`Colegio Lobachevsky · Prof. Danny Torres · Página ${pageCount}`,14,203);
+      }
+    });
+
+    const filename =
+      `Registro_6to_Primaria_${info.fechaCorta}_${info.horaArchivo}.pdf`;
+
+    doc.save(filename);
+  }
+</script>
+</body>
+</html>
