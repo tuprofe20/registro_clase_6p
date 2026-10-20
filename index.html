@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registro Institucional - 6° Grado de Primaria | Colegio Lobachevsky</title>
 
+  <!-- Tailwind CSS & Librerías de exportación PDF -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
@@ -50,20 +51,28 @@
         linear-gradient(135deg, var(--navy), var(--blue));
     }
 
-    .crest{
-      width:76px;height:76px;border-radius:18px;
-      border:2px solid rgba(255,255,255,.35);
-      display:flex;align-items:center;justify-content:center;
-      background:rgba(255,255,255,.08);
-      box-shadow:inset 0 0 0 5px rgba(255,255,255,.04);
+    /* Contenedor del Logo de la Institución */
+    .logo-container{
+      width:84px;
+      height:84px;
+      border-radius:16px;
+      border:2px solid rgba(255,255,255,.9);
+      background:rgba(255,255,255,.95);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 
+    /* Estados de Asistencia */
     .select-asistio { background-color:#dcfce7!important; color:#166534!important; }
     .select-tarde   { background-color:#fef3c7!important; color:#92400e!important; }
     .select-falto   { background-color:#fee2e2!important; color:#991b1b!important; }
     .select-retiro  { background-color:#ffedd5!important; color:#9a3412!important; }
     .select-default { background-color:#f3f4f6!important; color:#374151!important; }
 
+    /* Estados de Conducta */
     .select-cond-a  { background-color:#dcfce7!important; color:#166534!important; }
     .select-cond-b  { background-color:#fef3c7!important; color:#92400e!important; }
     .select-cond-c  { background-color:#fee2e2!important; color:#991b1b!important; }
@@ -73,7 +82,7 @@
 
     .score-input{
       width:100%;
-      min-width:54px;
+      min-width:52px;
       text-align:center;
       padding:.48rem .25rem;
       border:1px solid #d8e0ea;
@@ -87,6 +96,12 @@
       box-shadow:0 0 0 3px rgba(29,155,209,.15);
     }
 
+    /* Modal / Cuadro de diálogo sin alert */
+    .custom-modal-backdrop {
+      background-color: rgba(11, 31, 58, 0.65);
+      backdrop-filter: blur(4px);
+    }
+
     @media print{
       .no-print{display:none!important;}
       body{background:white;}
@@ -98,17 +113,15 @@
 <body class="p-3 md:p-7">
   <main class="max-w-[1500px] mx-auto bg-white rounded-2xl overflow-hidden institutional-card">
 
-    <!-- ENCABEZADO -->
-    <section class="header-pattern text-white">
+    <!-- ENCABEZADO INSTITUCIONAL -->
+    <header class="header-pattern text-white">
       <div class="px-5 md:px-8 py-6 border-b-[5px] border-amber-400">
         <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-6">
 
-          <div class="flex items-center gap-4">
-            <div class="crest shrink-0" aria-label="Emblema institucional">
-              <div class="text-center leading-none">
-                <div class="text-2xl font-black">CL</div>
-                <div class="text-[10px] tracking-[.22em] mt-1">2026</div>
-              </div>
+          <div class="flex items-center gap-5">
+            <!-- Logo de la Institución -->
+            <div class="logo-container shrink-0" title="Colegio Lobachevsky">
+              <img src="LOBACHEVSKY-ESCUDO 2026.png" alt="Escudo Colegio Lobachevsky" class="w-[76px] h-[76px] object-contain drop-shadow-sm">
             </div>
 
             <div>
@@ -118,10 +131,15 @@
               <h1 class="text-2xl md:text-4xl font-black tracking-tight mt-1">
                 Registro de Evaluación y Asistencia
               </h1>
-              <div class="flex flex-wrap gap-x-5 gap-y-1 mt-3 text-sm text-slate-200">
+              <div class="flex flex-wrap items-center gap-x-5 gap-y-2 mt-3 text-sm text-slate-200">
                 <span><strong class="text-white">Nivel:</strong> Primaria</span>
                 <span><strong class="text-white">Grado:</strong> 6.º Grado</span>
-                <span><strong class="text-white">Profesor:</strong> Danny Torres</span>
+                <!-- Casillero para ingresar nombre del Docente -->
+                <div class="flex items-center gap-1.5 bg-black/25 px-2.5 py-1 rounded-lg border border-white/20">
+                  <label for="input-profesor" class="text-amber-300 font-bold text-xs uppercase tracking-wider">Profesor(a):</label>
+                  <input id="input-profesor" type="text" value="Danny Torres" placeholder="Nombres y Apellidos"
+                         class="bg-transparent text-white font-semibold outline-none border-b border-transparent focus:border-amber-300 transition text-sm w-44 md:w-56" />
+                </div>
                 <span><strong class="text-white">Año:</strong> 2026</span>
               </div>
             </div>
@@ -129,60 +147,66 @@
 
           <div class="grid sm:grid-cols-2 gap-3 min-w-[320px]">
             <div class="bg-white/10 border border-white/15 rounded-xl px-4 py-3 backdrop-blur-sm">
-              <div class="text-[11px] uppercase tracking-widest text-sky-200">Curso / Área</div>
+              <label for="input-curso" class="text-[11px] uppercase tracking-widest text-sky-200 font-bold block">Curso / Área</label>
               <input id="input-curso" type="text" value="Matemática"
-                     class="mt-1 w-full bg-transparent text-white font-semibold outline-none border-b border-white/30 pb-1 focus:border-amber-300">
+                     class="mt-1 w-full bg-transparent text-white font-semibold outline-none border-b border-white/30 pb-1 focus:border-amber-300 transition">
             </div>
 
             <div class="bg-white/10 border border-white/15 rounded-xl px-4 py-3 backdrop-blur-sm">
-              <div class="text-[11px] uppercase tracking-widest text-sky-200">Fecha y hora actual</div>
+              <div class="text-[11px] uppercase tracking-widest text-sky-200 font-bold">Fecha y hora actual</div>
               <div id="reloj" class="mt-1 font-semibold text-white"></div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- BOTONERA -->
-      <div class="px-5 md:px-8 py-4 bg-slate-950/20 no-print">
-        <div class="flex flex-wrap gap-2">
-          <button onclick="marcarTodosAsistio()"
-                  class="px-4 py-2 rounded-lg bg-sky-500 hover:bg-sky-400 font-semibold shadow-sm transition">
+      <!-- BOTONERA DE ACCIÓN RÁPIDA -->
+      <div class="px-5 md:px-8 py-3.5 bg-slate-950/25 no-print">
+        <div class="flex flex-wrap items-center gap-2">
+          <button type="button" onclick="marcarTodosAsistio()"
+                  class="px-4 py-2 rounded-lg bg-sky-500 hover:bg-sky-400 font-semibold shadow-sm text-sm transition">
             ✓ Todos asistieron
           </button>
-          <button onclick="marcarTodosConductaA()"
-                  class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 font-semibold shadow-sm transition">
+          <button type="button" onclick="marcarTodosConductaA()"
+                  class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 font-semibold shadow-sm text-sm transition">
             ★ Conducta A
           </button>
-          <button onclick="limpiarRegistro()"
-                  class="px-4 py-2 rounded-lg bg-slate-600 hover:bg-slate-500 font-semibold shadow-sm transition">
-            ↺ Limpiar
+          <button type="button" onclick="abrirModalLimpiar()"
+                  class="px-4 py-2 rounded-lg bg-slate-600 hover:bg-slate-500 font-semibold shadow-sm text-sm transition">
+            ↺ Limpiar notas
           </button>
-          <button onclick="exportarPDF()"
-                  class="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 font-semibold shadow-sm transition">
-            ↓ Descargar PDF
+          <button type="button" onclick="exportarPDF()"
+                  class="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 font-semibold shadow-sm text-sm transition flex items-center gap-1.5 ml-auto">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Descargar PDF
           </button>
         </div>
       </div>
-    </section>
+    </header>
 
-    <!-- INFORMACIÓN -->
+    <!-- INFORMACIÓN DE SESIÓN -->
     <section class="px-5 md:px-8 pt-5">
       <div class="grid md:grid-cols-2 gap-3">
         <div class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
-          <div class="text-[11px] uppercase tracking-widest text-slate-500 font-bold">Tema / Sesión</div>
-          <input id="input-tema" type="text" placeholder="Escriba el tema de clase"
+          <label for="input-tema" class="text-[11px] uppercase tracking-widest text-slate-500 font-bold block">Tema / Sesión del día</label>
+          <input id="input-tema" type="text" placeholder="Ej. Operaciones Combinadas y Fracciones Heterogéneas"
                  class="w-full bg-transparent font-semibold text-slate-800 outline-none mt-1">
         </div>
-        <div class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
-          <div class="text-[11px] uppercase tracking-widest text-slate-500 font-bold">Total de alumnos</div>
-          <div class="font-black text-xl text-[#123f73] mt-1">10 estudiantes</div>
+        <div class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 flex items-center justify-between">
+          <div>
+            <div class="text-[11px] uppercase tracking-widest text-slate-500 font-bold">Total de alumnos</div>
+            <div class="font-black text-xl text-[#123f73] mt-0.5">10 estudiantes</div>
+          </div>
+          <div class="text-xs text-slate-500 font-semibold text-right">
+            Nivel Primaria
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- TABLA -->
+    <!-- TABLA DE EVALUACIÓN Y ASISTENCIA -->
     <section class="p-5 md:p-8">
-      <div class="overflow-x-auto rounded-xl border border-slate-300">
+      <div class="overflow-x-auto rounded-xl border border-slate-300 shadow-sm">
         <table class="w-full min-w-[1050px] border-collapse text-sm" id="registro-tabla">
           <thead>
             <tr class="bg-[#0b1f3a] text-white">
@@ -191,40 +215,102 @@
               <th rowspan="2" class="border border-slate-500 p-3 w-32 text-center">Asistencia</th>
               <th rowspan="2" class="border border-slate-500 p-3 w-24 text-center bg-[#14532d]">Conducta</th>
               <th colspan="3" class="border border-slate-500 p-2 text-center bg-[#123f73]">
-                Participación de clase
+                Participación en clase
               </th>
               <th colspan="3" class="border border-slate-500 p-2 text-center bg-[#3730a3]">
-                Práctica calificada
+                Práctica Calificada (Escala 0 - 100)
               </th>
             </tr>
             <tr class="bg-slate-100 text-slate-800">
-              <th class="border border-slate-300 p-2 text-center">P1</th>
-              <th class="border border-slate-300 p-2 text-center">P2</th>
-              <th class="border border-slate-300 p-2 text-center bg-sky-100 text-sky-900">Total</th>
-              <th class="border border-slate-300 p-2 text-center">PC1</th>
-              <th class="border border-slate-300 p-2 text-center">PC2</th>
-              <th class="border border-slate-300 p-2 text-center bg-indigo-100 text-indigo-900">Prom.</th>
+              <th class="border border-slate-300 p-2 text-center font-bold text-sky-950" title="Participación 1">P1</th>
+              <th class="border border-slate-300 p-2 text-center font-bold text-sky-950" title="Participación 2">P2</th>
+              <th class="border border-slate-300 p-2 text-center bg-sky-100 text-sky-900 font-bold">Total</th>
+              <th class="border border-slate-300 p-2 text-center font-bold text-indigo-950" title="Práctica Calificada 1">PC1</th>
+              <th class="border border-slate-300 p-2 text-center font-bold text-indigo-950" title="Práctica Calificada 2">PC2</th>
+              <th class="border border-slate-300 p-2 text-center bg-indigo-100 text-indigo-900 font-bold">Prom.</th>
             </tr>
           </thead>
           <tbody id="cuerpo-tabla"></tbody>
         </table>
       </div>
 
+      <!-- RUBRO DETALLE DE PRÁCTICAS TOMADAS (PC1 Y PC2) -->
+      <div class="mt-6 p-4 rounded-xl border border-indigo-200 bg-indigo-50/50">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="w-2.5 h-2.5 rounded-full bg-indigo-600"></span>
+          <h2 class="text-xs uppercase font-extrabold tracking-wider text-indigo-950">
+            Detalle de Prácticas Calificadas (Temas tomados en clase)
+          </h2>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4">
+          <!-- Detalle PC1 -->
+          <div class="bg-white border border-slate-200 rounded-lg p-3 shadow-xs">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 bg-indigo-100 text-indigo-800 text-xs font-black rounded">PC1</span>
+              <label for="input-detalle-pc1" class="text-xs font-bold text-slate-600 uppercase tracking-wide">
+                Detalle de PC1:
+              </label>
+            </div>
+            <input id="input-detalle-pc1" type="text"
+                   placeholder="Escriba de qué trata la práctica 1..."
+                   class="w-full mt-1.5 text-sm text-slate-800 font-medium outline-none border-b border-slate-300 pb-1 focus:border-indigo-600 transition" />
+          </div>
+
+          <!-- Detalle PC2 -->
+          <div class="bg-white border border-slate-200 rounded-lg p-3 shadow-xs">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 bg-indigo-100 text-indigo-800 text-xs font-black rounded">PC2</span>
+              <label for="input-detalle-pc2" class="text-xs font-bold text-slate-600 uppercase tracking-wide">
+                Detalle de PC2:
+              </label>
+            </div>
+            <input id="input-detalle-pc2" type="text"
+                   placeholder="Escriba de qué trata la práctica 2..."
+                   class="w-full mt-1.5 text-sm text-slate-800 font-medium outline-none border-b border-slate-300 pb-1 focus:border-indigo-600 transition" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Leyenda y Notas -->
       <div class="mt-4 flex flex-col md:flex-row md:justify-between gap-2 text-xs text-slate-500">
-        <span>Asistencia: Asistió · Tarde · Faltó · Se retiró</span>
-        <span>Conducta: A · B · C</span>
-        <span>El PDF registra automáticamente la fecha y hora de descarga.</span>
+        <span><strong>Participación:</strong> P1 y P2 (Suma total de puntos)</span>
+        <span><strong>Prácticas:</strong> PC1 y PC2 (Escala 0 a 100 con promedio dinámico real)</span>
+        <span><strong>Asistencia:</strong> Asistió · Tarde · Faltó · Se retiró</span>
+        <span><strong>Conducta:</strong> A · B · C</span>
       </div>
     </section>
 
-    <footer class="px-5 md:px-8 py-4 bg-slate-50 border-t border-slate-200 flex flex-col md:flex-row justify-between gap-2 text-xs text-slate-500">
-      <span>Colegio Lobachevsky · Registro institucional</span>
-      <span>Prof. Danny Torres · 6.º Grado de Primaria</span>
+    <!-- PIE DE PÁGINA -->
+    <footer class="px-5 md:px-8 py-4 bg-slate-50 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center gap-2 text-xs text-slate-600">
+      <span>Colegio Lobachevsky · Sistema de Registro Institucional</span>
+      <span id="footer-docente">Prof. Danny Torres · 6.º Grado de Primaria</span>
     </footer>
   </main>
 
+  <!-- MODAL PARA CONFIRMACIÓN DE LIMPIEZA -->
+  <div id="modal-limpiar" class="fixed inset-0 custom-modal-backdrop hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-slate-200">
+      <div class="w-12 h-12 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center mx-auto mb-4">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+      </div>
+      <h3 class="text-lg font-bold text-slate-800 text-center mb-1">¿Limpiar todo el registro?</h3>
+      <p class="text-xs text-slate-500 text-center mb-5">
+        Esta acción restablecerá las asistencias, conductas, participaciones (P1, P2) y notas de prácticas (PS1, PS2) a sus valores iniciales.
+      </p>
+      <div class="grid grid-cols-2 gap-3">
+        <button onclick="cerrarModalLimpiar()" class="py-2.5 px-4 rounded-xl border border-slate-300 text-slate-700 font-semibold text-sm hover:bg-slate-100 transition">
+          Cancelar
+        </button>
+        <button onclick="confirmarLimpiezaRegistro()" class="py-2.5 px-4 rounded-xl bg-rose-600 text-white font-semibold text-sm hover:bg-rose-700 transition">
+          Sí, limpiar
+        </button>
+      </div>
+    </div>
+  </div>
+
 <script>
-  // Orden alfabético por apellido
+  // Listado oficial ordenado alfabéticamente
   const alumnos = [
     "Bances Aniceto Paolo Alexander",
     "Barrios Muro Javier Alessandro",
@@ -239,7 +325,16 @@
   ];
 
   const tbody = document.getElementById('cuerpo-tabla');
+  const inputProfesor = document.getElementById('input-profesor');
+  const footerDocente = document.getElementById('footer-docente');
 
+  // Sincronizar nombre de docente con el pie de página
+  inputProfesor.addEventListener('input', () => {
+    const nombre = inputProfesor.value.trim() || 'Docente';
+    footerDocente.textContent = `Prof. ${nombre} · 6.º Grado de Primaria`;
+  });
+
+  // Generación de filas dinámicas
   alumnos.forEach((alumno, index) => {
     const i = index + 1;
     const tr = document.createElement('tr');
@@ -268,25 +363,28 @@
         </select>
       </td>
 
+      <!-- Participación: P1 y P2 (Suma) -->
       <td class="border border-slate-300 p-1.5">
-        <input type="number" min="0" max="100" class="score-input input-part" data-row="${i}">
+        <input type="number" min="0" max="100" placeholder="0" class="score-input input-part" data-row="${i}">
       </td>
       <td class="border border-slate-300 p-1.5">
-        <input type="number" min="0" max="100" class="score-input input-part" data-row="${i}">
+        <input type="number" min="0" max="100" placeholder="0" class="score-input input-part" data-row="${i}">
       </td>
       <td class="border border-slate-300 p-2 text-center font-black text-sky-900 bg-sky-50" id="total-part-${i}">0</td>
 
+      <!-- Prácticas Calificadas: PC1 y PC2 (Escala 0 a 100) -->
       <td class="border border-slate-300 p-1.5">
-        <input type="number" min="0" max="20" class="score-input input-prac" data-row="${i}">
+        <input type="number" min="0" max="100" placeholder="0" class="score-input input-prac" data-row="${i}">
       </td>
       <td class="border border-slate-300 p-1.5">
-        <input type="number" min="0" max="20" class="score-input input-prac" data-row="${i}">
+        <input type="number" min="0" max="100" placeholder="0" class="score-input input-prac" data-row="${i}">
       </td>
       <td class="border border-slate-300 p-2 text-center font-black text-indigo-900 bg-indigo-50" id="prom-prac-${i}">0</td>
     `;
     tbody.appendChild(tr);
   });
 
+  // Validación y topes
   function limitarValor(input, min, max){
     if(input.value === '') return;
     let n = Number(input.value);
@@ -294,34 +392,42 @@
     if(n > max) input.value = max;
   }
 
+  // Cálculos reactivos de participación (suma) y prácticas (promedio dinámico de 0 a 100)
   document.addEventListener('input', (e) => {
     if(e.target.classList.contains('input-part')){
       limitarValor(e.target, 0, 100);
       const row = e.target.dataset.row;
       const valores = [...document.querySelectorAll(`.input-part[data-row="${row}"]`)]
         .map(x => Number(x.value || 0));
-      document.getElementById(`total-part-${row}`).textContent = valores.reduce((a,b)=>a+b,0);
+      document.getElementById(`total-part-${row}`).textContent = valores.reduce((a, b) => a + b, 0);
     }
 
     if(e.target.classList.contains('input-prac')){
-      limitarValor(e.target, 0, 20);
+      limitarValor(e.target, 0, 100);
       const row = e.target.dataset.row;
       const inputs = [...document.querySelectorAll(`.input-prac[data-row="${row}"]`)];
       const valores = inputs
         .filter(x => x.value.trim() !== '')
         .map(x => Number(x.value));
 
-      let promedio = 0;
-      if(valores.length) promedio = valores.reduce((a,b)=>a+b,0) / valores.length;
+      let resultado = '0';
+      if(valores.length === 1){
+        // Si solo se ingresó una nota, el promedio dinámico es esa misma nota
+        resultado = String(valores[0]);
+      } else if(valores.length > 1){
+        // Si se ingresaron ambas, se calcula la media aritmética
+        const promedio = valores.reduce((a, b) => a + b, 0) / valores.length;
+        resultado = (promedio % 1 === 0) ? String(promedio) : promedio.toFixed(1);
+      }
 
-      document.getElementById(`prom-prac-${row}`).textContent =
-        valores.length ? promedio.toFixed(1).replace('.0','') : '0';
+      document.getElementById(`prom-prac-${row}`).textContent = resultado;
     }
   });
 
+  // Estilos según selección de Asistencia y Conducta
   document.addEventListener('change', (e) => {
     if(e.target.classList.contains('asistencia-select')){
-      e.target.classList.remove('select-default','select-asistio','select-tarde','select-falto','select-retiro');
+      e.target.classList.remove('select-default', 'select-asistio', 'select-tarde', 'select-falto', 'select-retiro');
       const v = e.target.value;
       if(v === 'Asistió') e.target.classList.add('select-asistio');
       else if(v === 'Tarde') e.target.classList.add('select-tarde');
@@ -331,7 +437,7 @@
     }
 
     if(e.target.classList.contains('conducta-select')){
-      e.target.classList.remove('select-default','select-cond-a','select-cond-b','select-cond-c');
+      e.target.classList.remove('select-default', 'select-cond-a', 'select-cond-b', 'select-cond-c');
       const v = e.target.value;
       if(v === 'A') e.target.classList.add('select-cond-a');
       else if(v === 'B') e.target.classList.add('select-cond-b');
@@ -340,6 +446,7 @@
     }
   });
 
+  // Acciones en lote
   function marcarTodosAsistio(){
     document.querySelectorAll('.asistencia-select').forEach(s => {
       s.value = 'Asistió';
@@ -354,30 +461,39 @@
     });
   }
 
-  function limpiarRegistro(){
-    if(!confirm('¿Desea limpiar todo el registro actual?')) return;
-
+  // Modales de confirmación accesibles (sin alert ni confirm)
+  const modalLimpiar = document.getElementById('modal-limpiar');
+  function abrirModalLimpiar(){
+    modalLimpiar.classList.remove('hidden');
+  }
+  function cerrarModalLimpiar(){
+    modalLimpiar.classList.add('hidden');
+  }
+  function confirmarLimpiezaRegistro(){
     document.querySelectorAll('.asistencia-select, .conducta-select').forEach(s => {
       s.value = '-';
       s.dispatchEvent(new Event('change', {bubbles:true}));
     });
 
     document.querySelectorAll('.score-input').forEach(i => i.value = '');
-    alumnos.forEach((_,index)=>{
-      const i=index+1;
-      document.getElementById(`total-part-${i}`).textContent='0';
-      document.getElementById(`prom-prac-${i}`).textContent='0';
+    alumnos.forEach((_, index) => {
+      const i = index + 1;
+      document.getElementById(`total-part-${i}`).textContent = '0';
+      document.getElementById(`prom-prac-${i}`).textContent = '0';
     });
+
+    cerrarModalLimpiar();
   }
 
+  // Reloj institucional dinámico
   function fechaHoraObjeto(){
     const ahora = new Date();
     return {
       ahora,
-      fecha: ahora.toLocaleDateString('es-PE',{
+      fecha: ahora.toLocaleDateString('es-PE', {
         weekday:'long', year:'numeric', month:'long', day:'numeric'
       }),
-      hora: ahora.toLocaleTimeString('es-PE',{
+      hora: ahora.toLocaleTimeString('es-PE', {
         hour:'2-digit', minute:'2-digit', second:'2-digit'
       }),
       fechaCorta: `${String(ahora.getDate()).padStart(2,'0')}-${String(ahora.getMonth()+1).padStart(2,'0')}-${ahora.getFullYear()}`,
@@ -390,11 +506,12 @@
     document.getElementById('reloj').textContent = `${f.fecha} · ${f.hora}`;
   }
   actualizarReloj();
-  setInterval(actualizarReloj,1000);
+  setInterval(actualizarReloj, 1000);
 
+  // Extracción de datos para exportación
   function obtenerDatosTabla(){
-    return [...document.querySelectorAll('#cuerpo-tabla tr')].map((fila,index)=>{
-      const i = index+1;
+    return [...document.querySelectorAll('#cuerpo-tabla tr')].map((fila, index) => {
+      const i = index + 1;
       const part = fila.querySelectorAll('.input-part');
       const prac = fila.querySelectorAll('.input-prac');
 
@@ -403,101 +520,125 @@
         alumnos[index],
         fila.querySelector('.asistencia-select').value,
         fila.querySelector('.conducta-select').value,
-        part[0].value || '',
-        part[1].value || '',
+        part[0].value || '-',
+        part[1].value || '-',
         document.getElementById(`total-part-${i}`).textContent,
-        prac[0].value || '',
-        prac[1].value || '',
+        prac[0].value || '-',
+        prac[1].value || '-',
         document.getElementById(`prom-prac-${i}`).textContent
       ];
     });
   }
 
+  // Exportar PDF institucional con los nuevos rubros y datos del profesor
   function exportarPDF(){
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({orientation:'landscape', unit:'mm', format:'a4'});
     const info = fechaHoraObjeto();
 
-    const curso = document.getElementById('input-curso').value.trim() || 'Sin curso';
-    const tema = document.getElementById('input-tema').value.trim() || '-';
+    const profesor = document.getElementById('input-profesor').value.trim() || 'Docente de Aula';
+    const curso = document.getElementById('input-curso').value.trim() || 'Sin curso asignado';
+    const tema = document.getElementById('input-tema').value.trim() || 'Sin tema especificado';
+    const detallePC1 = document.getElementById('input-detalle-pc1').value.trim() || 'No especificado';
+    const detallePC2 = document.getElementById('input-detalle-pc2').value.trim() || 'No especificado';
 
-    // Encabezado institucional
-    doc.setFillColor(11,31,58);
-    doc.rect(0,0,297,34,'F');
+    // Encabezado estilizado
+    doc.setFillColor(11, 31, 58);
+    doc.rect(0, 0, 297, 34, 'F');
 
-    doc.setFillColor(213,167,47);
-    doc.rect(0,34,297,2,'F');
+    // Línea dorada institucional
+    doc.setFillColor(213, 167, 47);
+    doc.rect(0, 34, 297, 2.5, 'F');
 
-    doc.setTextColor(255,255,255);
-    doc.setFont('helvetica','bold');
-    doc.setFontSize(18);
-    doc.text('COLEGIO LOBACHEVSKY',14,12);
+    // Título y datos institucionales
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(17);
+    doc.text('COLEGIO LOBACHEVSKY', 14, 11);
 
-    doc.setFontSize(13);
-    doc.text('Registro de Evaluación y Asistencia — 6.º Grado de Primaria',14,21);
+    doc.setFontSize(12);
+    doc.text('Registro de Evaluación y Asistencia — 6.º Grado de Primaria', 14, 19);
 
-    doc.setFont('helvetica','normal');
+    doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
-    doc.text(`Profesor: Danny Torres   |   Curso: ${curso}`,14,28);
+    doc.text(`Profesor(a): ${profesor}   |   Curso: ${curso}`, 14, 27);
 
     doc.setFontSize(8.5);
-    doc.text(`Tema: ${tema}`,205,14);
-    doc.text(`Descargado: ${info.fecha}`,205,21);
-    doc.text(`Hora: ${info.hora}`,205,28);
+    doc.text(`Tema / Sesión: ${tema}`, 195, 12);
+    doc.text(`Fecha: ${info.fecha}`, 195, 19);
+    doc.text(`Hora: ${info.hora}`, 195, 26);
 
+    // Tabla de estudiantes
     doc.autoTable({
-      startY:41,
-      head:[
+      startY: 40,
+      head: [
         [
-          {content:'N.º',rowSpan:2},
-          {content:'Alumno(a)',rowSpan:2},
-          {content:'Asistencia',rowSpan:2},
-          {content:'Conducta',rowSpan:2},
-          {content:'Participación de clase',colSpan:3},
-          {content:'Práctica calificada',colSpan:3}
+          {content:'N.º', rowSpan:2},
+          {content:'Alumno(a)', rowSpan:2},
+          {content:'Asistencia', rowSpan:2},
+          {content:'Conducta', rowSpan:2},
+          {content:'Participación de clase', colSpan:3},
+          {content:'Práctica Calificada (0-100)', colSpan:3}
         ],
-        ['P1','P2','Total','PC1','PC2','Prom.']
+        ['P1', 'P2', 'Total', 'PC1', 'PC2', 'Prom.']
       ],
-      body:obtenerDatosTabla(),
-      theme:'grid',
-      styles:{
-        font:'helvetica',
-        fontSize:8.5,
-        cellPadding:2.1,
-        valign:'middle',
-        lineColor:[184,194,207],
-        lineWidth:.25
+      body: obtenerDatosTabla(),
+      theme: 'grid',
+      styles: {
+        font: 'helvetica',
+        fontSize: 8.5,
+        cellPadding: 2,
+        valign: 'middle',
+        lineColor: [184, 194, 207],
+        lineWidth: 0.25
       },
-      headStyles:{
-        fillColor:[18,63,115],
-        textColor:[255,255,255],
-        fontStyle:'bold',
-        halign:'center'
+      headStyles: {
+        fillColor: [18, 63, 115],
+        textColor: [255, 255, 255],
+        fontStyle: 'bold',
+        halign: 'center'
       },
-      alternateRowStyles:{ fillColor:[248,250,252] },
-      columnStyles:{
-        0:{halign:'center',cellWidth:12},
-        1:{cellWidth:56,fontStyle:'bold'},
-        2:{halign:'center',cellWidth:27},
-        3:{halign:'center',cellWidth:20},
-        4:{halign:'center',cellWidth:18},
-        5:{halign:'center',cellWidth:18},
-        6:{halign:'center',cellWidth:19},
-        7:{halign:'center',cellWidth:18},
-        8:{halign:'center',cellWidth:18},
-        9:{halign:'center',cellWidth:20}
+      alternateRowStyles: { fillColor: [248, 250, 252] },
+      columnStyles: {
+        0: {halign: 'center', cellWidth: 12},
+        1: {cellWidth: 62, fontStyle: 'bold'},
+        2: {halign: 'center', cellWidth: 26},
+        3: {halign: 'center', cellWidth: 20},
+        4: {halign: 'center', cellWidth: 17},
+        5: {halign: 'center', cellWidth: 17},
+        6: {halign: 'center', cellWidth: 19, fontStyle: 'bold'},
+        7: {halign: 'center', cellWidth: 17},
+        8: {halign: 'center', cellWidth: 17},
+        9: {halign: 'center', cellWidth: 20, fontStyle: 'bold'}
       },
-      didDrawPage: function(){
-        const pageCount = doc.internal.getNumberOfPages();
+      didDrawPage: function(data){
+        const finalY = data.cursor.y + 7;
+
+        // Recuadro de especificaciones de las Prácticas en el PDF
+        doc.setFillColor(245, 247, 251);
+        doc.roundedRect(14, finalY, 269, 17, 2, 2, 'F');
+        doc.setDrawColor(200, 210, 225);
+        doc.roundedRect(14, finalY, 269, 17, 2, 2, 'S');
+
+        doc.setFont('helvetica', 'bold');
         doc.setFontSize(8);
-        doc.setTextColor(100,116,139);
-        doc.text(`Colegio Lobachevsky · Prof. Danny Torres · Página ${pageCount}`,14,203);
+        doc.setTextColor(18, 63, 115);
+        doc.text('DETALLE DE LAS PRÁCTICAS CALIFICADAS (0 - 100):', 18, finalY + 5);
+
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(50, 50, 50);
+        doc.text(`• PC1 (Práctica 1): ${detallePC1}`, 18, finalY + 10);
+        doc.text(`• PC2 (Práctica 2): ${detallePC2}`, 18, finalY + 14.5);
+
+        // Pie de página
+        const pageCount = doc.internal.getNumberOfPages();
+        doc.setFontSize(7.5);
+        doc.setTextColor(100, 116, 139);
+        doc.text(`Colegio Lobachevsky · Prof. ${profesor} · Página ${pageCount}`, 14, 203);
       }
     });
 
-    const filename =
-      `Registro_6to_Primaria_${info.fechaCorta}_${info.horaArchivo}.pdf`;
-
+    const filename = `Registro_6to_Primaria_${profesor.replace(/\s+/g, '_')}_${info.fechaCorta}.pdf`;
     doc.save(filename);
   }
 </script>
